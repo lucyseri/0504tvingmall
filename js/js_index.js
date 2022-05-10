@@ -1,6 +1,6 @@
 'use strict';
 
-
+//section1
 const gallery = document.querySelector('.gallery');
 const galleryUl = gallery.querySelector('ul');
 const galleryUlLi = galleryUl.querySelectorAll('li');
@@ -10,37 +10,28 @@ const itemsUl=items.querySelector('ul');
 const itemsUlLi=itemsUl.querySelectorAll('li');
 
 const gap1 = galleryUlLi[3].offsetLeft - galleryUlLi[2].offsetLeft;
-const gap2 = galleryUlLi[2].offsetLeft - galleryUlLi[0].offsetLeft;
-
 
 const arrBg = [];
 
-//1. background
 for (let i = 0; i < galleryUlLi.length; i++) {
   arrBg.push(`url(img/b${i}.jpg) no-repeat 50%/cover`);
   galleryUlLi[i].style.background = arrBg[i]
 }
 
 
-//2. autogallery & 해당 items에 배경색 주기
-let i = 1;
+let i = 0;
 
 function autoGallery() {
   i++;
 
   const goto = (-i * gap1) + 'px';
 
-  if (i <= 1) {
-    gallery.style.left = "-" + galleryUlLi[4].offsetLeft + "px";
+  if (i > galleryUlLi.length - 2) {
+
+    gallery.style.left = "-" + galleryUlLi[1].offsetLeft + "px";
     gallery.style.transition = 0 + "ms";
 
-    i = galleryUlLi.length - 2;
-  } else if (i > galleryUlLi.length - 2) {
-
-    gallery.style.left = "-" + gap2 + "px";
-    gallery.style.transition = 0 + "ms";
-
-    i = 2;
+    i = 1;
     setTimeout(autoGallery, 0);
 
   } else {
@@ -48,8 +39,9 @@ function autoGallery() {
     gallery.style.transition = 300 + "ms";
   }
 
+  
   itemsUlLi.forEach((el, idx)=>{
-    let startNum=i-2;
+    let startNum=i-1;
     if(i==galleryUlLi.length-2){
       startNum=0;
     }
@@ -59,6 +51,7 @@ function autoGallery() {
       el.classList.remove('on');
     }
   })
+  
 }
 
 let setIn = setInterval(autoGallery, 3000);
@@ -90,7 +83,7 @@ function itemEvent(e){
       if(el==e.target){
         el.classList.add('on')
 
-          let idx2=idx+2;
+          let idx2=idx+1;
 
           const goto = (-idx2 * gap1) + 'px';
 
@@ -98,7 +91,7 @@ function itemEvent(e){
           gallery.style.transition = 300 + "ms";
 
         if(idx2>itemsUlLi.length-1){
-          idx2=idx+2;
+          idx2=idx+1;
         }
 
           i=idx2;
@@ -109,6 +102,8 @@ function itemEvent(e){
     })
   }
 };
+
+
 
 const leftArrow = document.querySelector('span.left')
 const rightArrow = document.querySelector('span.right')
@@ -174,7 +169,18 @@ const sec4ThumUl=sec4Thum.querySelector('ul');
 const sec4ThumUlLi=sec4ThumUl.querySelectorAll('li');
 
 const poster=document.querySelector('.poster');
+const posterImg=poster.querySelector('img');
 const rightCon=document.querySelectorAll('.right-con');
+
+const shortThum=document.querySelector('.short-thum')
+const shortCon=document.querySelector('.short-con')
+const shortConUl=shortCon.querySelector('ul')
+const shortConUlLi=shortConUl.querySelectorAll('li')
+
+const shortBcon=document.querySelector('.short-bcon')
+const shortBconUl=shortBcon.querySelector('ul')
+const shortBconUlLi=shortBconUl.querySelectorAll('li')
+
 
 sec4ArrowLeft.addEventListener('click', ()=>{
 
@@ -189,11 +195,10 @@ sec4ArrowRight.addEventListener('click', ()=>{
 
 sec4ThumUl.addEventListener('click', (e)=>{
   const parentTarget=e.target.parentElement;
-  console.log(parentTarget)
 
   sec4ThumUlLi.forEach((el, idx)=>{
     if(el==parentTarget){
-      poster.style.background=`url(../../img/poster${idx}.jpg) no-repeat 50%/cover`;
+      posterImg.setAttribute('src', `img/poster${idx}.jpg`)
       
       rightCon.forEach((el2, idx2)=>{
         if(idx2==idx){
@@ -203,10 +208,41 @@ sec4ThumUl.addEventListener('click', (e)=>{
           el2.classList.remove('click');
         }
       })
-      
     }
-
   })
+})
+shortConUl.addEventListener('click', (e)=>{
+  const parentTarget=e.target.parentElement;
 
-  
+  shortConUlLi.forEach((el, idx)=>{
+    if(el==parentTarget){
+      posterImg.setAttribute('src', `img/poster${idx}.jpg`)
+      
+      rightCon.forEach((el2, idx2)=>{
+        if(idx2==idx){
+          el2.classList.add('click');
+        }else{
+          el2.classList.remove('click');
+        }
+      })
+    }
+  })
+})
+
+shortBconUl.addEventListener('click', (e)=>{
+  shortBconUlLi.forEach((el, idx)=>{
+    if(el==e.target){
+      if(idx===1){
+        shortCon.style.top='-' + (shortConUlLi[0].offsetHeight*5) +'px';
+        shortCon.style.transition='all 0.2s'
+        shortBconUlLi[1].classList.add('on')
+        shortBconUlLi[0].classList.remove('on')
+      }else if(idx===0){
+        shortCon.style.top='0' +'px';
+        shortCon.style.transition='all 0.2s'
+        shortBconUlLi[0].classList.add('on')
+        shortBconUlLi[1].classList.remove('on')
+      }
+    }
+  })
 })
